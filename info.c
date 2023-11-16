@@ -1,4 +1,5 @@
 #include "monty.h"
+info_t info;
 /**
  * treat_monty - Treat The Monty File
  * @filename: Filename From Argument
@@ -63,6 +64,7 @@ int split(void)
 	return (0);
 }
 
+#include "monty.h"
 
 /**
  * excute_monty - Verifie Monty Command And Excute it
