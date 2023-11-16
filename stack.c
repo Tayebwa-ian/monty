@@ -18,7 +18,6 @@ void _stack(stack_t **stack, unsigned int line_number)
  * @line_number: Line Number
  * Return: Void
  *
- * Return: None
  */
 void _queue(stack_t **stack, unsigned int line_number)
 {
