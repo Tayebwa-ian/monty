@@ -1,5 +1,82 @@
 #include "monty.h"
 info_t info;
+char *resize(int i, int *n, char *buf);
+
+/**
+ *_getline - reads a line of characters from a stream
+ *@buffer: buffer to store the line
+ *@n: buffer size
+ *@stream: where to read the line
+ *Return: 0 on success and -1 on failure
+ */
+ssize_t _getline(char **buffer, int *n, FILE *stream)
+{
+	int i = 0, ch;
+
+	if (*buffer == NULL || *n == 0)
+	{
+		*buffer = malloc(5);
+		if (*buffer == NULL)
+		{
+			free(buffer);
+			return (-1);
+		}
+		*n = 5;
+	}
+	while (1)
+	{
+		ch = fgetc(stream);
+		if (ch == EOF)
+		{
+			if (i == 0)
+			{
+				free(*buffer);
+				return (-1);
+			}
+			else
+			{
+				(*buffer)[i] = '\0';
+				return (0);
+			}
+		}
+		/* resize the buffer if not enough*/
+		if (i >= (*n - 1))
+		{
+			*buffer = resize(i, n, *buffer);
+		}
+		(*buffer)[i++] = ch; /* add character to buffer */
+		if (ch == '\n') /* check if the character is a new line char */
+		{
+			(*buffer)[i] = '\0';
+			return (0);
+		}
+	}
+}
+
+/**
+ *resize - resize the buffer
+ *@i: the iterator
+ *@n: size of buffer
+ *@buf: previous buffer
+ *Return: new buffer created
+ */
+char *resize(int i, int *n, char *buf)
+{
+        char *new;
+        int new_size = (*n * 2);
+	(void)i;
+
+        new = realloc(buf, new_size);
+        if (new == NULL)
+        {
+                free(new);
+                return (NULL);
+        }
+        *n = new_size;
+
+        return (new);
+}
+
 /**
  * treat_monty - Treat The Monty File
  * @filename: Filename From Argument
@@ -8,14 +85,14 @@ info_t info;
 int treat_monty(char *filename)
 {
 	ssize_t n_r = 1;
-	size_t len = 0;
+	int len = 0;
 	stack_t *stack = NULL;
 
 	info.fn = filename;
 	info.fp = fopen(info.fn, "r");
 	if (info.fp == NULL)
 		handle_error(3);
-	while ((n_r = getline(&info.cmd, &len, info.fp)) > 0)
+	while ((n_r = _getline(&info.cmd, &len, info.fp)) > 0)
 	{
 		if (*info.cmd == '\n')
 			continue;
@@ -63,9 +140,7 @@ int split(void)
 		return (-1);
 	return (0);
 }
-
 #include "monty.h"
-
 /**
  * excute_monty - Verifie Monty Command And Excute it
  * @stack: Stack or Queue
