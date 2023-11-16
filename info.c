@@ -63,7 +63,9 @@ int split(void)
 		return (-1);
 	return (0);
 }
+
 #include "monty.h"
+
 /**
  * excute_monty - Verifie Monty Command And Excute it
  * @stack: Stack or Queue

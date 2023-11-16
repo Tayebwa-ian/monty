@@ -2,8 +2,18 @@
 #define MONTY_H
 
 #include <stdio.h>
+#include <unistd.h>
+#include <string.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <ctype.h>
 #include <stddef.h>
+
+#define DELIMITER " \n\t\a"
+#define LIFO 1
+#define FIFO 0
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -34,6 +44,37 @@ typedef struct instruction_s
         char *opcode;
         void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
+
+/**
+ * struct info_s - Data From The Monty File
+ * @cmd: Line From File
+ * @arg: Argument To Excute
+ * @l_number: Line Number
+ * @fp: File Descriptor
+ * @fn: File Name
+ * @type: FIFO LIFO
+ * Description: Information About The Commands In The Monty File
+ */
+typedef struct info_s
+{
+	char *cmd;
+	char **arg;
+	char *fn;
+	int l_number;
+	FILE *fp;
+	int type;
+} info_t;
+extern info_t info;
+/**
+ * struct error - print error to stderr
+ * @out:error code
+ * @error_type:function to handle error
+ */
+typedef struct error
+{
+	int out;
+	void (*error_type)(void);
+} error_t;
 
 /*helpers.c */
 int dlistint_len(stack_t *stack);
